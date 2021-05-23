@@ -31,7 +31,3 @@ docker-compose up -d
 ## List Docker Containers
 ```docker
 docker ps -a
-```
-
-## License
-[Mithun Technologies](http://mithuntechnologies.co.in)

@@ -23,7 +23,7 @@ spec:
         app: springboot
     spec:
       containers:
-      - image: dockerhandson/spring-boot-mongo
+      - image: 640164286187.dkr.ecr.ap-south-1.amazonaws.com/springbootapplication
         name: springboot
         ports:
         - containerPort: 8080  

@@ -107,15 +107,9 @@ spec:
         name: mongo
         env:
         - name: MONOGO_INITDB_ROOT_USERNAME
-          valueFrom:
-            configMapKeyRef:
-              name: springapp-configmap
-              key: username
+          value: springapp
         - name: MONOGO_INITDB_ROOT_PASSWORD
-          valueFrom:
-            configMapKeyRef:
-              name: springapp-configmap
-              key: password
+          value: mongodb@123
         ports:
         - containerPort: 27017
         volumeMounts:

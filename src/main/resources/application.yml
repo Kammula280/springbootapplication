@@ -5,7 +5,6 @@ spring:
       port: 27017
       username: springapp
       password: mongodb@123
-      database: users
       authentication-database: admin
 
 server:

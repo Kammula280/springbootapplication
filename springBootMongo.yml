@@ -37,12 +37,12 @@ spec:
         env:
         - name: MONGO_DB_HOSTNAME
           value: mongo
-        - name: MONOGO_INITDB_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
             configMapKeyRef:
               name: springapp-configmap
               key: username
-        - name: MONOGO_INITDB_ROOT_PASSWORD
+        - name: MONGO_INITDB_ROOT_PASSWORD
           valueFrom:
             configMapKeyRef:
               name: springapp-configmap
@@ -112,12 +112,12 @@ spec:
       - image: mongo
         name: mongo
         env:
-        - name: MONOGO_INITDB_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
             configMapKeyRef:
               name: springapp-configmap
               key: username
-        - name: MONOGO_INITDB_ROOT_PASSWORD
+        - name: MONGO_INITDB_ROOT_PASSWORD
           valueFrom:
             configMapKeyRef:
               name: springapp-configmap

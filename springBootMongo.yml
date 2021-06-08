@@ -38,15 +38,9 @@ spec:
         - name: MONGO_DB_HOSTNAME
           value: mongo
         - name: MONOGO_INITDB_ROOT_USERNAME
-          valueFrom:
-            configMapKeyRef:
-              name: springapp-configmap
-              key: username
+          value: springapp
         - name: MONOGO_INITDB_ROOT_PASSWORD
-          valueFrom:
-            configMapKeyRef:
-              name: springapp-configmap
-              key: password
+          value: mongodb@123
         resources:
           requests:
             cpu: "500m"

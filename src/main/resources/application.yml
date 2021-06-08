@@ -5,6 +5,7 @@ spring:
       port: 27017
       username: username
       password: password
+      database: users
       authentication-database: admin
 
 server:

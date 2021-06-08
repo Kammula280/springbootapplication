@@ -36,7 +36,7 @@ spec:
            periodSeconds: 60  
         env:
         - name: MONGO_DB_HOSTNAME
-          value: mongodb
+          value: mongo
         - name: MONOGO_INITDB_ROOT_USERNAME
           value: username
         - name: MONOGO_INITDB_ROOT_PASSWORD

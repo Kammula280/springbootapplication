@@ -135,14 +135,3 @@ spec:
     targetPort: 27017
   selector:
     app: mongo
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mongodbebs
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi

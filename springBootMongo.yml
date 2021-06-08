@@ -36,11 +36,11 @@ spec:
            periodSeconds: 60  
         env:
         - name: MONGO_DB_HOSTNAME
-          value: mongo
+          value: mongodb
         - name: MONOGO_INITDB_ROOT_USERNAME
-          value: springapp
+          value: username
         - name: MONOGO_INITDB_ROOT_PASSWORD
-          value: mongodb@123
+          value: password
         resources:
           requests:
             cpu: "500m"
@@ -66,8 +66,8 @@ kind: ConfigMap
 metadata:
   name : springapp-configmap
 data:
-  username: springapp
-  password: mongodb@123
+  username: username
+  password: password
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -107,9 +107,9 @@ spec:
         name: mongo
         env:
         - name: MONOGO_INITDB_ROOT_USERNAME
-          value: springapp
+          value: username
         - name: MONOGO_INITDB_ROOT_PASSWORD
-          value: mongodb@123
+          value: password
         ports:
         - containerPort: 27017
         volumeMounts:

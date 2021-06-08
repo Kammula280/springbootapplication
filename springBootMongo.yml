@@ -1,70 +1,110 @@
-# Config Map
-kind: ConfigMap 
-apiVersion: v1 
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: springapp-configmap
-data:
-  # Configuration values can be set as key-value properties
-  username: springapp
-  password: mongodb@123
----
-# Replication Controller for springapp
-apiVersion: v1
-kind: ReplicationController
-metadata:
-  name: spring-controller
+  name : springbootapplication
 spec:
-  replicas: 1
+  replicas: 2
+  strategy:
+    type: RollingUpdate
   selector:
-    app: springboot
+    matchLabels:
+      app: springbootapp
   template:
     metadata:
+      name: springbootapplicationpod
       labels:
-        app: springboot
+        app: springbootapp
     spec:
       containers:
-      - image: dockerhandson/spring-boot-mongo
-        name: springboot
+      - image: kammula280/springbootapplication
+        name: springbootapplicationcontainer
         ports:
-        - containerPort: 8080  
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+          periodSeconds: 60
+        livenessProbe:
+           httpGet:
+            path: /
+            port: 8080
+           initialDelaySeconds: 15
+           timeoutSeconds: 5
+           periodSeconds: 60  
         env:
         - name: MONGO_DB_HOSTNAME
           value: mongo
-        - name: MONGO_INITDB_ROOT_USERNAME
+        - name: MONOGO_INITDB_ROOT_USERNAME
           valueFrom:
             configMapKeyRef:
               name: springapp-configmap
-              key: username 
-        - name: MONGO_INITDB_ROOT_PASSWORD
+              key: username
+        - name: MONOGO_INITDB_ROOT_PASSWORD
           valueFrom:
             configMapKeyRef:
               name: springapp-configmap
-              key: password       
+              key: password
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
 ---
-# Node Port Service For SpringApp
 apiVersion: v1
 kind: Service
-metadata:
-  name: springboot
+metadata:   
+  name : springboot
 spec:
-  type: NodePort
+  type: LoadBalancer
+  selector: 
+    app: springbootapp
   ports:
-    - port: 8080
+    - port: 80
       targetPort: 8080
-  selector:
-    app: springboot
 ---
-# Mongo RC with host path Volume
 apiVersion: v1
-kind: ReplicationController
+kind: ConfigMap
 metadata:
-  name: mongo-controller
+  name : springapp-configmap
+data:
+  username: springapp
+  password: mongodb@123
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpaspringbootdeployment
 spec:
-  replicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name : springbootapplication
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 50
+      type: Resource
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongostatefulset
+spec:
+  replicas: 2
+  serviceName: "mongo"
   selector:
-    app: mongo
+    matchLabels:
+      app: mongo
   template:
     metadata:
+      name: mongopod
       labels:
         app: mongo
     spec:
@@ -72,35 +112,50 @@ spec:
       - image: mongo
         name: mongo
         env:
-        - name: MONGO_INITDB_ROOT_USERNAME
+        - name: MONOGO_INITDB_ROOT_USERNAME
           valueFrom:
             configMapKeyRef:
               name: springapp-configmap
-              key: username 
-        - name: MONGO_INITDB_ROOT_PASSWORD
+              key: username
+        - name: MONOGO_INITDB_ROOT_PASSWORD
           valueFrom:
             configMapKeyRef:
               name: springapp-configmap
-              key: password 
+              key: password
         ports:
         - containerPort: 27017
         volumeMounts:
-        - name: mongo-persistent-storage
+        - name: mongodbhostpath
           mountPath: /data/db
-      volumes:
-      - name: mongo-persistent-storage
-        hostPath:
-         path: /tmp/dbbackup
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodbhostpath
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: manual
+        resources:
+          requests: 
+            storage: 1Gi
 ---
-# Mongo Node Port RC
 apiVersion: v1
 kind: Service
 metadata:
   name: mongo
 spec:
-  type: ClusterIP
+  clusterIP: None
   ports:
   - port: 27017
     targetPort: 27017
   selector:
     app: mongo
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodbhostpath
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

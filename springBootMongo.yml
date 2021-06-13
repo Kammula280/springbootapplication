@@ -23,14 +23,14 @@ spec:
         readinessProbe:
           httpGet:
             path: /
-            port: 8080
+            port: 80
           initialDelaySeconds: 15
           timeoutSeconds: 10
           periodSeconds: 5
         livenessProbe:
           httpGet:
             path: /
-            port: 8080
+            port: 80
           initialDelaySeconds: 15
           timeoutSeconds: 10
           periodSeconds: 5 

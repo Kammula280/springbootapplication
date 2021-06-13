@@ -60,7 +60,7 @@ kind: Service
 metadata:   
   name : springboot
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector: 
     app: springbootapp
   ports:

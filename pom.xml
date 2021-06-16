@@ -85,6 +85,18 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+       <distributionManagement>
+	    <repository>
+	      <id>nexus</id>
+	      <name>spring boot releases Nexus Repository</name>
+	      <url>http://13.233.244.101:8081/repository/springbootversion/</url>
+	    </repository>
+	    <snapshotRepository>
+	      <id>nexus</id>
+	      <name>spring boot Snapshot Nexus Repository </name>
+	      <url>http://13.233.244.101:8081/repository/springbootsnapshot/</url>
+	    </snapshotRepository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>

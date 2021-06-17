@@ -20,18 +20,6 @@ spec:
         name: springbootapplicationcontainer
         ports:
         - containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 60
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 60
         env:
         - name: MONGO_DB_HOSTNAME
           value: mongo
